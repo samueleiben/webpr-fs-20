@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scope Tests</title>
+  </head>
+  <body>
+    <script>
+      const id = x => x;
+      const fst = x => y => x; // first
+
+      const snd = x => y => y; // second
+
+      // eta reduction
+      /* const snd = x => y => id(y);
+      const snd = x => id;
+      const snd = x => fst(id)(x); // eta reduction again
+      const snd = fst(id); */
+
+      document.writeln(id(id));
+      document.writeln(id(id) === id);
+      document.writeln(fst(id)() === id);
+      document.writeln(fst(id)(fst) === id);
+
+      const one = fst(1);
+      document.writeln(one(1000) === 1);
+
+      document.writeln(snd(1000)(1) === 1);
+    </script>
+  </body>
+</html>
