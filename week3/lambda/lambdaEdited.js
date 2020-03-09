@@ -33,7 +33,7 @@ const and = first => second => first(second)(first);
 // -> eta reduction:
 const or = M;
 
-const Pair = first => second => f => f(first, second); // f is a discriminator function (or a getter). Example use in lambdaTest.js
+const Pair = first => second => f => f(first)(second); // f is a discriminator function (or a getter). Example use in lambdaTest.js
 // const firstname = first => second => first;
 // simplification
 const firstname = fst;
