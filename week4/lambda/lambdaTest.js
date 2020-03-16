@@ -13,8 +13,8 @@ lambdaOk.push(F(null)(true) === true );
 lambdaOk.push(F(undefined)(id) === id );
 
 const p = Pair(1)(2);
-lambdaOk.push(fst(p) === 1 );
-lambdaOk.push(snd(p) === 2 );
+lambdaOk.push(p(fst) === 1 );
+lambdaOk.push(p(snd) === 2 );
 
 const updatedPair = Pair(fst(p) + 1)(snd(p));
 
