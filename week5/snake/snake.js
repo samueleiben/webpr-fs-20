@@ -31,7 +31,6 @@ const pairMap = f => p =>  pair ( f (fst(p)) ) ( f (snd(p)) );
 
 function changeDirection(orientation) {
     const idx = orientation.indexOf(direction);
-    console.log(idx);
     direction = orientation[idx + 1];
 }
 
@@ -45,8 +44,7 @@ function safeGetElementById(id) {
 const log = s => console.log(s);
 
 function start() {
-
-    either (safeGetElementById("canvas"))
+    safeGetElementById("canvas")
            (log)
            (startWithCanvas);
 }
