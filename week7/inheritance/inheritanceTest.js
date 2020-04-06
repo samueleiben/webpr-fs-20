@@ -94,6 +94,8 @@
 
     const dk = Person( {work: () => ""} );
 
+    Object.setPrototypeOf(dk, Person.prototype);
+
     ok.push(dk instanceof Person);
 
     report("inheritance-setProto", ok);
