@@ -1,14 +1,29 @@
 "use strict";
 
-// find a solution for suite, test, assert
+/**
+ * Generic Types
+ * @typedef {*} a
+ */
+
+/**
+ * Constructor of an assert that is passed into the {@link test} function.
+ * @returns {{equals: (function({a},{a}):undefined), getOk: (function(): Array<boolean>)}}
+ * @constructor
+ */
 
 const Assert = () => {
+    /** @type {Array<boolean>} */
     const ok = [];
+    /**
+     * A function that takes two arguments of the same type, checks them for equality and pushes the
+     * result onto {@link ok}. Side effect only, no return value.
+     * @param {a} actual
+     * @param {a} expected
+     */
     const equals = (actual, expected) => {
         const result = (actual === expected);
         if (! result) {
            console.error(`not equal! actual was '${actual}' but expected '${expected}'`);
-           debugger
         }
         ok.push(result);
     };
@@ -16,19 +31,20 @@ const Assert = () => {
         getOk: () => ok,
         equals: equals,
     }
-}
+};
 
 
 /**
- * providing a scope and name for a test callback that fills the array
- * of boolean checks
- * @param {string} origin
- * @param {function([boolean]): *} callback
+ * providing a scope and name for a test callback that takes a value of type {@link Assert}
+ * and side-effects the assert to capture the test results.
+ * Then it creates the report for this assert.
+ * @param {string} origin, the name to be reported as the origin of the reported tests
+ * @param {function(Assert): *} callback
  */
 const test = (origin, callback) => {
-    const assert = Assert();      //    das ok anlegen
-    callback(assert);       //    das ok befüllen
-    report(origin, assert.getOk()); //    report mit name und ok aufrufen
+    const assert = Assert();          //    das ok anlegen
+    callback(assert);                 //    das ok befüllen
+    report(origin, assert.getOk());   //    report mit name und ok aufrufen
 };
 
 
