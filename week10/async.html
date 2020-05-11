@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<script>
+    // Example
+
+    // fetch ('http://fhnw.ch/json/students/list')
+    //  .then(response => response.json())
+    //  .then(students => console.log(students.length))
+    //  .catch (err    => console.log(err)
+
+    // rewrite as async/await.
+
+    async function loadAndProcess() {
+        try {
+            const response = await fetch('http://fhnw.ch/json/students/list');
+            const students = await response.json();
+            console.log(students.length)
+        }
+        catch (err) { console.log(err) }
+    }
+    loadAndProcess();
+
+</script>
+
+</body>
+</html>

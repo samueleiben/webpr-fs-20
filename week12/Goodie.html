@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Goodie</title>
+</head>
+<body>
+
+
+<script>
+    const Studierender = () => {
+        let grade = 0;
+        const setGrade = x => grade = x;
+        const getGrade = () => grade;
+
+        return {
+            setGrade: setGrade,
+            getGrade: getGrade,
+            foo:      () => 42
+        }
+    };
+    const studi = Studierender();
+    studi.setGrade(6.0);
+    document.writeln(studi.getGrade());
+    document.writeln(studi.foo());
+
+
+
+</script>
+
+</body>
+</html>
