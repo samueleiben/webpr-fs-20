@@ -7,8 +7,12 @@
 
 
 <script>
+    // match, replace, split
 
-
+    const pattern = /(\w+)\s+\1/ig;
+    document.writeln( "Ich  kenne kenne das das ABC!".match(pattern) );
+    document.writeln( "Ich  kenne kenne das das ABC!".replace(pattern, "$1") );
+    document.writeln( "Ich  kenne kenne das das ABC!".split(pattern) );
 
 </script>
 

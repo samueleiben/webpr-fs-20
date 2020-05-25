@@ -1,5 +1,5 @@
 
-// todo: make bad/naive implementation correct
+export { Scheduler, DataFlowVariable }
 
 // execute asynchronous tasks in strict sequence, aka "reactive stream", "flux architecture"
 const Scheduler = () => {

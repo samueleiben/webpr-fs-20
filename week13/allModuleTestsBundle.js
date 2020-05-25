@@ -131,59 +131,89 @@ modSuite.add("singleton", assert => {
 
 modSuite.run();
 
-/**
- * @module Person (just an immutable product type)
- */
+const Formulae =  {
+    A1: 'n(B3) - n(B2)', B1: '1',              C1: 'n(A1) + n(B1)',
+    A2: '2',             B2: '2',              C2: 'n(A2) + n(B2)',
+    A3: 'n(A1) + n(A2)', B3: 'n(B1) + n(B2)',  C3: 'n(C1) + n(C2)',
+};
 
-// ctor
+const DFVs = {}; // lazy cache for the backing data flow variables
 
-const Person =
-    firstname =>
-    lastname  =>
-    Object.seal( selector  => selector (firstname) (lastname) );
+const cols = ["A","B","C"];
+const rows = ["1","2","3"];
 
+function startExcel() {
+    const dataContainer = document.getElementById('dataContainer');
+    fillTable(dataContainer);
+}
 
-// getters
+function fillTable(container) {
+    rows.forEach( row => {
+        let tr = document.createElement("TR");
+        cols.forEach( col => {
+            let td     = document.createElement("TD");
+            let input  = document.createElement("INPUT");
+            let cellid = "" + col + row;
+            input.setAttribute("VALUE", Formulae[cellid]);
+            input.setAttribute("ID", cellid);
+            DFVs[cellid] = df(input);
 
-const firstname = firstname => _ => firstname;
-const lastname  = _ => lastname  => lastname;
-const setLastname  = person => ln => Person (person(lastname)) (ln);
+            input.onchange = evt => {
+                Formulae[cellid] = input.value;
+                DFVs[cellid] = df(input);
+                refresh();
+            };
+            input.onclick  = evt => input.value = Formulae[cellid] ;
 
-// module "methods"
+            td.appendChild(input);
+            tr.appendChild(td);
+        });
+        container.appendChild(tr);
+    });
+}
 
-const toString = person => 'Person ' + person(firstname) + " " +  person(lastname);
+function refresh() {
+    cols.forEach( col => {
+        rows.forEach( row => {
+            let cellid  = "" + col + row;
+            let input   = document.getElementById(cellid);
+            input.value = n$1(input);
+        });
+    });
+}
 
-const equals   = p1 => p2 =>
-    p1(firstname) === p2(firstname) &&
-    p1(lastname)  === p2(lastname);
+function df(input) {
+    return DataFlowVariable ( () => {
+        // uncomment to inspect which DFVs are evaluated when
+        // console.log("evaluating: cell " + input.id + " has value " + input.value +", formula " + Formulae[input.id]);
+        return Number( eval(Formulae[input.id]))
+    } ) ;
+}
 
-const toObj = person => ({
-   firstname: person(firstname),
-   lastname:  person(lastname)
+// get the numerical value of an input element's value attribute
+function n$1(input) {
+    return DFVs[input.id]();
+}
+
+// requires ../util/test.js
+
+const excelSuite = Suite("excel");
+
+excelSuite.add("excel", assert => {
+
+    let tbody = document.createElement("TBODY");
+    tbody.setAttribute("ID","dataContainer");
+    let body = document.getElementsByTagName("BODY")[0];
+    body.appendChild(tbody);
+
+    startExcel();
+    refresh();
+    assert.is(n(C3), 6);
+
+    body.removeChild(tbody);
+
 });
 
-const toPerson = personObj => Person (personObj.firstname) (personObj.lastname);
-
-// todo: the line below should be uncommented
-
-const person = Suite("person");
-
-person.test("use", assert => {
-
-    const dierk = Person ("Dierk") ('König');
-
-    assert.is(dierk(firstname), "Dierk");
-
-    const gently = setLastname(dierk)("Gently");
-
-    assert.is( gently(lastname), "Gently");
-
-    assert.true(   equals (dierk) (dierk)  );
-    assert.true( ! equals (dierk) (gently) );
-
-    assert.true( equals (dierk) (toPerson(toObj(dierk))) );
-    assert.is( toString(dierk), 'Person Dierk König');
-
-});
+excelSuite.run();
 
 // importing all tests that make up the suite of tests that are build on the ES6 module system
